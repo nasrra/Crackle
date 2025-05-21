@@ -8,19 +8,17 @@ function Slot(_x, _y) constructor{
 
 grid = [];
 grid_length = 6;
-grid_height = 7;
+grid_height = 5;
 slot_size = 32;
-slot_padding = 8;
+slot_padding = 24;
 
 function create_grid(){
     var index = 0;
     for(var i = 0; i < grid_height; i++){
         for(var j = 0; j < grid_length; j++){
-            var slot = new Slot(
-                x + (slot_size+slot_padding + (slot_size+slot_padding) * j),
-                y + (slot_size+slot_padding + (slot_size+slot_padding) * i)
-            );
-
+            var slot = instance_create_layer(0,0,LAYER_SLOTS, obj_slot);
+            slot.x = x + (slot_size+slot_padding + (slot_size+slot_padding) * j);
+            slot.y = y + (slot_size+slot_padding + (slot_size+slot_padding) * i);
             array_push(grid, slot);
             // var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
             var item = instance_create_layer(0, 0, LAYER_ITEMS, get_random_item());

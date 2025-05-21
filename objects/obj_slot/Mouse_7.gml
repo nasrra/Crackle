@@ -1,3 +1,5 @@
 /// @description Insert description here
 // You can write your code in this editor
-item = noone;
+if(obj_mouse_cursor.item != noone){
+	hovered = false;
+}
