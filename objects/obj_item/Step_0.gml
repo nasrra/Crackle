@@ -18,7 +18,6 @@ if (dragging) {
 	// removing mouse follow and release bug.
     if (mouse_check_button_released(mb_left)) {
         dragging = false;
-        obj_mouse_cursor.item = noone;
 		// layer = LAYER_ITEMS;
 	    layer = layer_get_id(LAYER_ITEMS);
         // Place item, trigger event, etc.

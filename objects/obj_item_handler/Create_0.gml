@@ -1,11 +1,4 @@
 /// @description Item Manager Create Event
-function Slot(_x, _y) constructor{
-    x = _x;
-    y = _y;
-    row = undefined;
-    item = noone;
-}
-
 grid = [];
 grid_length = 6;
 grid_height = 5;
@@ -85,4 +78,27 @@ function insert_item_at_row(row){
     item.target = slot;
     item.slot = slot;
     item.index = row;
+}
+
+function swap_slots(slotA, slotB) {
+    show_debug_message("s");
+
+    // Swap the item references
+    var temp_item = slotA.item;
+    slotA.item = slotB.item;
+    slotB.item = temp_item;
+
+    // Reassign each item's slot reference (important for logic)
+    slotA.item.slot = slotA;
+    slotB.item.slot = slotB;
+
+    // Optionally swap index and target too, if needed:
+    var temp_index  = slotA.item.index;
+    var temp_target = slotA.item.target;
+
+    slotA.item.index = slotB.item.index;
+    slotA.item.target = slotB.item.target;
+
+    slotB.item.index = temp_index;
+    slotB.item.target = temp_target;
 }
