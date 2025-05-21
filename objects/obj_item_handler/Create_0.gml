@@ -7,8 +7,8 @@ function Slot(_x, _y) constructor{
 }
 
 grid = [];
-grid_length = 10;
-grid_height = 5;
+grid_length = 6;
+grid_height = 7;
 slot_size = 32;
 slot_padding = 8;
 
@@ -27,6 +27,7 @@ function create_grid(){
             slot.item = item;
             slot.row = j;
             item.target = slot;
+            item.slot = slot;
             item.index = index;
             index++;
         }
@@ -64,6 +65,7 @@ function remove_item(index){
             current_slot.item = above_item;
             above_item.index = above+grid_length;
             above_item.target = current_slot;
+            above_item.slot = current_slot;
             above_slot.item = noone;
             removed = true;
         }
@@ -83,5 +85,6 @@ function insert_item_at_row(row){
     var item = instance_create_layer(slot.x, -100, LAYER_ITEMS, get_random_item());
     slot.item = item;
     item.target = slot;
+    item.slot = slot;
     item.index = row;
 }
