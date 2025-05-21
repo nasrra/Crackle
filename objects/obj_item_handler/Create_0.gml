@@ -1,5 +1,4 @@
-/// @description Insert description here
-// You can write your code in this editor
+/// @description Item Manager Create Event
 function Slot(_x, _y) constructor{
     x = _x;
     y = _y;
@@ -22,7 +21,11 @@ function create_grid(){
             );
 
             array_push(grid, slot);
-            var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
+            // var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
+            var item = instance_create_layer(0, 0, LAYER_ITEMS, get_random_item());
+            slot.item = item;
+            item.target = slot;
+            item.index = index;
             index++;
         }
     }
@@ -43,5 +46,23 @@ function get_random_item(){
             return obj_item_3;
         case 3:
             return obj_item_4;
+    }
+}
+
+function remove_item(index){
+    instance_destroy(grid[index].item);
+    var above = index - grid_length;
+    show_debug_message(index);
+    while(above >= 0){
+        var current_slot = array_get(grid, above+grid_length);
+        var above_slot = array_get(grid, above);
+        var above_item = above_slot.item;
+        if(above_item != noone && instance_exists(above_item)){
+            current_slot.item = above_item;
+            above_item.index = above+grid_length;
+            above_item.target = current_slot;
+            above_slot.item = noone;
+        }
+        above -= grid_length;
     }
 }
