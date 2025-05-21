@@ -2,6 +2,7 @@
 function Slot(_x, _y) constructor{
     x = _x;
     y = _y;
+    row = undefined;
     item = noone;
 }
 
@@ -24,6 +25,7 @@ function create_grid(){
             // var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
             var item = instance_create_layer(0, 0, LAYER_ITEMS, get_random_item());
             slot.item = item;
+            slot.row = j;
             item.target = slot;
             item.index = index;
             index++;
@@ -50,19 +52,36 @@ function get_random_item(){
 }
 
 function remove_item(index){
-    instance_destroy(grid[index].item);
+    var initial_slot = grid[index]; 
+    instance_destroy(initial_slot.item);
     var above = index - grid_length;
-    show_debug_message(index);
+    var removed = false;
     while(above >= 0){
-        var current_slot = array_get(grid, above+grid_length);
-        var above_slot = array_get(grid, above);
+        var current_slot = grid[above+grid_length];
+        var above_slot = grid[above];
         var above_item = above_slot.item;
         if(above_item != noone && instance_exists(above_item)){
             current_slot.item = above_item;
             above_item.index = above+grid_length;
             above_item.target = current_slot;
             above_slot.item = noone;
+            removed = true;
         }
+        show_debug_message(string(above+grid_length) +" "+ string(initial_slot.row));
         above -= grid_length;
     }
+    if(removed == true || (index >= 0 && index < grid_length)){
+        insert_item_at_row(initial_slot.row);
+    }
+}
+
+function insert_item_at_row(row){
+    if(row < 0 || row > grid_length){
+        show_error("Error: inserting item at row {" + string(row) + "} is not valid!", true);
+    }
+    var slot = grid[row];
+    var item = instance_create_layer(slot.x, -100, LAYER_ITEMS, get_random_item());
+    slot.item = item;
+    item.target = slot;
+    item.index = row;
 }
