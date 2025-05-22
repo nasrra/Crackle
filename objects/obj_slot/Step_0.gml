@@ -7,10 +7,14 @@ if(obj_mouse_cursor.item != noone){
 
 if(previous_hovered == true && hovered == false){
 	obj_mouse_cursor.hovered_slot = noone;
+	idle_state();
 }
 
 if(hovered == true && previous_hovered == false){
 	obj_mouse_cursor.hovered_slot = id;
+	hover_state();
 }
+
+handle_scale();
 
 scored_this_frame = false;
