@@ -117,94 +117,81 @@ function score_grid(){
         var current_id = current_slot.item.item_id;
         var scored_neighbours = ds_map_create();
 
-        var scored = true;
-        while(scored == true){
-            scored = false;
+        var left_fill_map       = ds_map_create();
+        var right_fill_map      = ds_map_create();
+        var up_fill_map         = ds_map_create();
+        var down_fill_map       = ds_map_create();
 
-            if(i % grid_width != 0){
-                var left_slot = grid[i-1];
-                var added = _score_neighbour(current_slot, left_slot, scored_neighbours)
-                scored = added == true? true : scored;
+        _flood_fill(i, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
 
-                if(i < array_length(grid)-1){
-                    var right_slot = grid[i+1];
-                    var added = _score_neighbour(current_slot, right_slot, scored_neighbours)
-                    scored = added == true? true : scored;
-                }
-            }
-            if(i >= grid_width){
-                var up_slot = grid[i-grid_width];
-                var added = _score_neighbour(current_slot, up_slot, scored_neighbours)
-                scored = added == true? true : scored;
-            }
-            if(i < array_length(grid) - grid_width){
-                var bot_slot = grid[i+grid_width];
-                var added = _score_neighbour(current_slot, bot_slot, scored_neighbours)
-                scored = added == true? true : scored;
-            }
-        }
-
-
-        show_debug_message(ds_map_size(scored_neighbours));
-        if(ds_map_size(scored_neighbours) >= min_score_amt){
-            var key = ds_map_find_first(scored_neighbours);
-            while(key != undefined && key != noone){
-                key.score();
-                key = ds_map_find_next(scored_neighbours, key);
-            }
+        if( ds_map_size(left_fill_map) >= min_score_amt  ||
+            ds_map_size(right_fill_map) >= min_score_amt ||
+            ds_map_size(up_fill_map) >= min_score_amt    ||
+            ds_map_size(down_fill_map) >= min_score_amt){
+            _score_fill_map(left_fill_map);
+            _score_fill_map(right_fill_map);
+            _score_fill_map(up_fill_map);
+            _score_fill_map(down_fill_map);
         }
 
         ds_map_destroy(scored_neighbours);
     }
 }
 
-function _flood_fill(root_index, scored_map){
-    var root_slot = grid[i];
-    var root_item_id = current_slot.item.item_id;
+function _score_fill_map(fill_map){
+    var key = ds_map_find_first(fill_map);
+    while(key != undefined && key != noone){
+        key.score();
+        key = ds_map_find_next(fill_map, key);
+    }
+}
 
-    var scored = true;
-    while(scored == true){
-        scored = false;
+function _flood_fill(root_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map){
+    var root_slot = grid[root_index];
+    var fill_index = undefined;
 
-        if(i % grid_width != 0){
-            var left_slot = grid[i-1];
-            var added = _score_neighbour(current_slot, left_slot, scored_neighbours)
-            scored = added == true? true : scored;
+    if(root_index % grid_width != 0){
+        fill_index = root_index-1;
+        var left_slot = grid[fill_index];
+        if(_fill_neighbour(root_slot, left_slot, left_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
+            _flood_fill(fill_index, left_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
+        }
 
-            if(i < array_length(grid)-1){
-                var right_slot = grid[i+1];
-                var added = _score_neighbour(current_slot, right_slot, scored_neighbours)
-                scored = added == true? true : scored;
+        if(root_index < array_length(grid)-1){
+            fill_index = root_index+1;
+            var right_slot = grid[fill_index];
+            if(_fill_neighbour(root_slot, right_slot, right_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
+                _flood_fill(fill_index, right_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
             }
         }
-        if(i >= grid_width){
-            var up_slot = grid[i-grid_width];
-            var added = _score_neighbour(current_slot, up_slot, scored_neighbours)
-            scored = added == true? true : scored;
-        }
-        if(i < array_length(grid) - grid_width){
-            var bot_slot = grid[i+grid_width];
-            var added = _score_neighbour(current_slot, bot_slot, scored_neighbours)
-            scored = added == true? true : scored;
+    }
+    if(root_index >= grid_width){
+        fill_index = root_index-grid_width;
+        var up_slot = grid[fill_index];
+        if(_fill_neighbour(root_slot, up_slot, up_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
+            _flood_fill(fill_index, up_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
         }
     }
-
-    if(ds_map_size(scored_neighbours) >= min_score_amt){
-        var key = ds_map_find_first(scored_neighbours);
-        while(key != undefined && key != noone){
-            key.score();
-            key = ds_map_find_next(scored_neighbours, key);
+    if(root_index < array_length(grid) - grid_width){
+        fill_index = root_index+grid_width;
+        var down_slot = grid[fill_index];
+        if(_fill_neighbour(root_slot, down_slot, down_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
+            _flood_fill(fill_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
         }
     }
 }
 
-function _score_neighbour(current, neighbour, scored_map){
-    if (!instance_exists(current) || !instance_exists(neighbour)) return false;
-    if (!instance_exists(current.item) || !instance_exists(neighbour.item)) return false;
-    if(ds_exists(scored_map, ds_type_map) == false) return false;
+function _fill_neighbour(current, neighbour, map_to_assign, left_fill_map, right_fill_map, up_fill_map, down_fill_map){
+    // if (!instance_exists(current) || !instance_exists(neighbour)) return false;
+    // if (!instance_exists(current.item) || !instance_exists(neighbour.item)) return false;
+    // if(ds_exists(scored_map, ds_type_map) == false) return false;
 
-    if(ds_map_exists(scored_map, neighbour.id) == false && neighbour.item.item_id == current.item.item_id){
-        ds_map_add(scored_map, neighbour.id, true);
+    if( ds_map_exists(left_fill_map, neighbour.id)  == false &&
+        ds_map_exists(right_fill_map, neighbour.id) == false && 
+        ds_map_exists(up_fill_map, neighbour.id)    == false && 
+        ds_map_exists(down_fill_map, neighbour.id)  == false &&
+        neighbour.item.item_id == current.item.item_id){
+        ds_map_add(map_to_assign, neighbour.id, true);
         return true;
     }
     return false;
