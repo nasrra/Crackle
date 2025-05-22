@@ -43,6 +43,7 @@
     {"id":{"name":"obj_mouse_cursor","path":"objects/obj_mouse_cursor/obj_mouse_cursor.yy",},},
     {"id":{"name":"obj_slot","path":"objects/obj_slot/obj_slot.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"DsMapExt","path":"scripts/DsMapExt/DsMapExt.yy",},},
     {"id":{"name":"GameManager","path":"scripts/GameManager/GameManager.yy",},},
     {"id":{"name":"ItemIds","path":"scripts/ItemIds/ItemIds.yy",},},
     {"id":{"name":"Layers","path":"scripts/Layers/Layers.yy",},},

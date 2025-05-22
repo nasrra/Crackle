@@ -1,10 +1,10 @@
 /// @description Item Manager Create Event
 grid = [];
-grid_width = 6;
+grid_width = 4;
 grid_height = 5;
 slot_size = 32;
 slot_padding = 24;
-min_score_amt = 3;
+min_score_amt = 2;
 
 function create_grid(){
     var index = 0;
@@ -71,7 +71,7 @@ function remove_item(index){
         insert_item_at_row(initial_slot.row);
     }
 
-    score_grid();
+    alarm_set(0,65);
 }
 
 function insert_item_at_row(row){
@@ -85,7 +85,7 @@ function insert_item_at_row(row){
     item.slot = slot;
     item.index = row;
 
-    score_grid();
+    alarm_set(0,65);
 }
 
 function swap_slots(slotA, slotB) {
@@ -112,6 +112,9 @@ function swap_slots(slotA, slotB) {
 }
 
 function score_grid(){
+
+    var full_fill_map = ds_map_create();
+
     for(var i = 0; i < array_length(grid); i++){
         var current_slot = grid[i];
         var current_id = current_slot.item.item_id;
@@ -122,75 +125,105 @@ function score_grid(){
         var up_fill_map         = ds_map_create();
         var down_fill_map       = ds_map_create();
 
-        _flood_fill(i, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
 
+        _flood_fill(i, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
         if( ds_map_size(left_fill_map) >= min_score_amt  ||
             ds_map_size(right_fill_map) >= min_score_amt ||
             ds_map_size(up_fill_map) >= min_score_amt    ||
             ds_map_size(down_fill_map) >= min_score_amt){
-            _score_fill_map(left_fill_map);
-            _score_fill_map(right_fill_map);
-            _score_fill_map(up_fill_map);
-            _score_fill_map(down_fill_map);
+            ds_map_merge(full_fill_map, left_fill_map);
+            ds_map_merge(full_fill_map, right_fill_map);
+            ds_map_merge(full_fill_map, up_fill_map);
+            ds_map_merge(full_fill_map, down_fill_map);
         }
+        // var total_connected = ds_map_size(left_fill_map) +
+        //                     ds_map_size(right_fill_map) +
+        //                     ds_map_size(up_fill_map) +
+        //                     ds_map_size(down_fill_map);
 
-        ds_map_destroy(scored_neighbours);
+        // show_debug_message(total_connected);
+        // if (total_connected >= min_score_amt) {
+        //     ds_map_merge(full_fill_map, left_fill_map);
+        //     ds_map_merge(full_fill_map, right_fill_map);
+        //     ds_map_merge(full_fill_map, up_fill_map);
+        //     ds_map_merge(full_fill_map, down_fill_map);
+        // }
+
+        ds_map_destroy(left_fill_map);
+        ds_map_destroy(right_fill_map);
+        ds_map_destroy(up_fill_map);
+        ds_map_destroy(down_fill_map);
     }
+
+    _score_fill_map(full_fill_map);
+    ds_map_destroy(full_fill_map);
 }
 
 function _score_fill_map(fill_map){
     var key = ds_map_find_first(fill_map);
     while(key != undefined && key != noone){
         key.score();
+        remove_item(key.item.index);
         key = ds_map_find_next(fill_map, key);
     }
 }
 
 function _flood_fill(root_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map){
     var root_slot = grid[root_index];
-    var fill_index = undefined;
+    var fill_index;
 
-    if(root_index % grid_width != 0){
-        fill_index = root_index-1;
-        var left_slot = grid[fill_index];
-        if(_fill_neighbour(root_slot, left_slot, left_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
-            _flood_fill(fill_index, left_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
-        }
-
-        if(root_index < array_length(grid)-1){
-            fill_index = root_index+1;
-            var right_slot = grid[fill_index];
-            if(_fill_neighbour(root_slot, right_slot, right_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
-                _flood_fill(fill_index, right_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
+    // Left neighbor (only if not at start of row)
+    if (root_index % grid_width != 0){
+        fill_index = root_index - 1;
+        if ((fill_index div grid_width) == (root_index div grid_width)){
+            var left_slot = grid[fill_index];
+            if(_fill_neighbour(root_slot, left_slot, left_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map)){
+                _flood_fill(fill_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
             }
         }
     }
-    if(root_index >= grid_width){
-        fill_index = root_index-grid_width;
-        var up_slot = grid[fill_index];
-        if(_fill_neighbour(root_slot, up_slot, up_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
-            _flood_fill(fill_index, up_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
+
+    // Right neighbor (only if not at end of row)
+    if ((root_index + 1) % grid_width != 0){
+        fill_index = root_index + 1;
+        if ((fill_index div grid_width) == (root_index div grid_width)){
+            var right_slot = grid[fill_index];
+            if(_fill_neighbour(root_slot, right_slot, right_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map)){
+                _flood_fill(fill_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
+            }
         }
     }
-    if(root_index < array_length(grid) - grid_width){
-        fill_index = root_index+grid_width;
+
+    // Up neighbor
+    if (root_index >= grid_width){
+        fill_index = root_index - grid_width;
+        var up_slot = grid[fill_index];
+        if(_fill_neighbour(root_slot, up_slot, up_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map)){
+            _flood_fill(fill_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
+        }
+    }
+
+    // Down neighbor
+    if (root_index < array_length(grid) - grid_width){
+        fill_index = root_index + grid_width;
         var down_slot = grid[fill_index];
-        if(_fill_neighbour(root_slot, down_slot, down_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map) == true){
+        if(_fill_neighbour(root_slot, down_slot, down_fill_map, left_fill_map, right_fill_map, up_fill_map, down_fill_map)){
             _flood_fill(fill_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map);
         }
     }
 }
+
 
 function _fill_neighbour(current, neighbour, map_to_assign, left_fill_map, right_fill_map, up_fill_map, down_fill_map){
     // if (!instance_exists(current) || !instance_exists(neighbour)) return false;
     // if (!instance_exists(current.item) || !instance_exists(neighbour.item)) return false;
     // if(ds_exists(scored_map, ds_type_map) == false) return false;
 
-    if( ds_map_exists(left_fill_map, neighbour.id)  == false &&
+    if( neighbour.item.item_id == current.item.item_id &&
+        ds_map_exists(left_fill_map, neighbour.id)  == false &&
         ds_map_exists(right_fill_map, neighbour.id) == false && 
         ds_map_exists(up_fill_map, neighbour.id)    == false && 
-        ds_map_exists(down_fill_map, neighbour.id)  == false &&
-        neighbour.item.item_id == current.item.item_id){
+        ds_map_exists(down_fill_map, neighbour.id)  == false){
         ds_map_add(map_to_assign, neighbour.id, true);
         return true;
     }

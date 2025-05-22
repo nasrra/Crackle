@@ -8,11 +8,13 @@ hover_scale = 1.25;
 row = undefined;
 item = noone;
 scored = false;
+scored_this_frame = false;
 
 function score(){
-	if(scored == true){
+	if(scored_this_frame == true){
 		show_debug_message("double scored!");
 	}
+	scored_this_frame = true;
 	scored = true;
 	alarm_set(0,120);
 }

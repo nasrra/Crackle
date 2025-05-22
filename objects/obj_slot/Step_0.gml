@@ -12,3 +12,5 @@ if(previous_hovered == true && hovered == false){
 if(hovered == true && previous_hovered == false){
 	obj_mouse_cursor.hovered_slot = id;
 }
+
+scored_this_frame = false;
