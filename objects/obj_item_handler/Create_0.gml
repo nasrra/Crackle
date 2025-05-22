@@ -1,6 +1,6 @@
 /// @description Item Manager Create Event
 grid = [];
-grid_length = 6;
+grid_width = 6;
 grid_height = 5;
 slot_size = 32;
 slot_padding = 24;
@@ -8,7 +8,7 @@ slot_padding = 24;
 function create_grid(){
     var index = 0;
     for(var i = 0; i < grid_height; i++){
-        for(var j = 0; j < grid_length; j++){
+        for(var j = 0; j < grid_width; j++){
             var slot = instance_create_layer(0,0,LAYER_SLOTS, obj_slot);
             slot.x = x + (slot_size+slot_padding + (slot_size+slot_padding) * j);
             slot.y = y + (slot_size+slot_padding + (slot_size+slot_padding) * i);
@@ -41,35 +41,40 @@ function get_random_item(){
         case 3:
             return obj_item_4;
     }
+
+    score_grid();
 }
 
 function remove_item(index){
     var initial_slot = grid[index]; 
     instance_destroy(initial_slot.item);
-    var above = index - grid_length;
+    var above = index - grid_width;
     var removed = false;
     while(above >= 0){
-        var current_slot = grid[above+grid_length];
+        var current = above+grid_width;
+        var current_slot = grid[current];
         var above_slot = grid[above];
         var above_item = above_slot.item;
         if(above_item != noone && instance_exists(above_item)){
             current_slot.item = above_item;
-            above_item.index = above+grid_length;
+            above_item.index = current;
             above_item.target = current_slot;
             above_item.slot = current_slot;
             above_slot.item = noone;
             removed = true;
         }
-        show_debug_message(string(above+grid_length) +" "+ string(initial_slot.row));
-        above -= grid_length;
+        show_debug_message(string(current) +" "+ string(initial_slot.row));
+        above -= grid_width;
     }
-    if(removed == true || (index >= 0 && index < grid_length)){
+    if(removed == true || (index >= 0 && index < grid_width)){
         insert_item_at_row(initial_slot.row);
     }
+
+    score_grid();
 }
 
 function insert_item_at_row(row){
-    if(row < 0 || row > grid_length){
+    if(row < 0 || row > grid_width){
         show_error("Error: inserting item at row {" + string(row) + "} is not valid!", true);
     }
     var slot = grid[row];
@@ -78,11 +83,11 @@ function insert_item_at_row(row){
     item.target = slot;
     item.slot = slot;
     item.index = row;
+
+    score_grid();
 }
 
 function swap_slots(slotA, slotB) {
-    show_debug_message("s");
-
     // Swap the item references
     var temp_item = slotA.item;
     slotA.item = slotB.item;
@@ -101,4 +106,37 @@ function swap_slots(slotA, slotB) {
 
     slotB.item.index = temp_index;
     slotB.item.target = temp_target;
+
+    score_grid();
+}
+
+function score_grid(){
+    for(var i = 0; i < array_length(grid); i++){
+        var current_slot = grid[i];
+        var current_id = current_slot.item.item_id;
+        if(i % grid_width != 0){
+            var left_slot = grid[i-1];
+            if(left_slot.item.item_id == current_id){
+                left_slot.score();
+            }
+            if(i < array_length(grid)-1){
+                var right_slot = grid[i+1];
+                if(right_slot.item.item_id == current_id){
+                    right_slot.score();
+                }
+            }
+        }
+        if(i >= grid_width){
+            var up_slot = grid[i-grid_width];
+            if(up_slot.item.item_id == current_id){
+                up_slot.score();
+            }
+        }
+        if(i < array_length(grid) - grid_width){
+            var bot_slot = grid[i+grid_width];
+            if(bot_slot.item.item_id == current_id){
+                bot_slot.score();
+            }
+        }
+    }
 }

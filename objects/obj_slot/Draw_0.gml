@@ -6,4 +6,6 @@ if(hovered == false){
 else{
     scale = lerp(scale, hover_scale, 0.33);    
 }
-draw_sprite_ext(sprite_index, image_index, x, y, scale, scale, image_angle, c_white, 1);
+
+var colour = scored == true? c_green : c_white;
+draw_sprite_ext(sprite_index, image_index, x, y, scale, scale, image_angle, colour, 1);

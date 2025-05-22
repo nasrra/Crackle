@@ -7,3 +7,9 @@ idle_scale = 1;
 hover_scale = 1.25;
 row = undefined;
 item = noone;
+scored = false;
+
+function score(){
+	scored = true;
+	alarm_set(0,120);
+}
