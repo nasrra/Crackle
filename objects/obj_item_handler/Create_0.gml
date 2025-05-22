@@ -13,6 +13,7 @@ function create_grid(){
             var slot = instance_create_layer(0,0,LAYER_SLOTS, obj_slot);
             slot.x = x + (slot_size+slot_padding + (slot_size+slot_padding) * j);
             slot.y = y + (slot_size+slot_padding + (slot_size+slot_padding) * i);
+            slot.initialise();
             array_push(grid, slot);
             // var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
             var item = instance_create_layer(0, 0, LAYER_ITEMS, get_random_item());
@@ -64,7 +65,7 @@ function remove_item(index){
             above_slot.item = noone;
             removed = true;
         }
-        show_debug_message(string(current) +" "+ string(initial_slot.row));
+        // show_debug_message(string(current) +" "+ string(initial_slot.row));
         above -= grid_width;
     }
     if(removed == true || (index >= 0 && index < grid_width)){

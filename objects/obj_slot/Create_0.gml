@@ -10,11 +10,21 @@ item = noone;
 scored = false;
 scored_this_frame = false;
 
+
+function initialise(){
+	scored_particle = instance_create_layer(x, y, LAYER_PARTICLES, obj_particle_system);
+	scored_particle.initialise(part_type_slot_scored(), 0, 0);
+	scored_particle.x = x;
+	scored_particle.y = y;
+}
+
 function score(){
 	if(scored_this_frame == true){
 		show_debug_message("double scored!");
 	}
+
 	scored_this_frame = true;
 	scored = true;
+	scored_particle.emit(20);
 	alarm_set(0,120);
 }
