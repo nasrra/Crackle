@@ -5,6 +5,7 @@ grid_height = 5;
 slot_size = 32;
 slot_padding = 24;
 min_score_amt = 2;
+items_are_grabbable = true;
 
 function create_grid(){
     var index = 0;
@@ -114,6 +115,8 @@ function swap_slots(slotA, slotB) {
 
 function score_grid(){
 
+    items_are_grabbable = false;
+
     var full_fill_map = ds_map_create();
 
     for(var i = 0; i < array_length(grid); i++){
@@ -162,11 +165,19 @@ function score_grid(){
 
 function _score_fill_map(fill_map){
     var key = ds_map_find_first(fill_map);
-    while(key != undefined && key != noone){
-        key.score();
-        remove_item(key.item.index);
-        key = ds_map_find_next(fill_map, key);
+    if(key == undefined || key == noone){
+        items_are_grabbable = true;
+        exit;
     }
+    else{
+        while(key != undefined && key != noone){
+            key.score();
+            audiomanager_play_slot_scored();
+            remove_item(key.item.index);
+            key = ds_map_find_next(fill_map, key);
+        }
+        items_are_grabbable = false;
+    }    
 }
 
 function _flood_fill(root_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map){

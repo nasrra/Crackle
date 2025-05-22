@@ -2,7 +2,7 @@
 // You can write your code in this editor
 move_to_target_position();
 // Start dragging
-if (!dragging && mouse_check_button_pressed(mb_left) && collision_point(mouse_x, mouse_y, id, false, false)) {
+if (!dragging && mouse_check_button_pressed(mb_left) && collision_point(mouse_x, mouse_y, id, false, false) && obj_item_handler.items_are_grabbable == true) {
     dragging = true;
     obj_mouse_cursor.item = id;
 	layer = layer_get_id(LAYER_MOUSE);
