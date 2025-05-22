@@ -4,6 +4,7 @@ grid_width = 6;
 grid_height = 5;
 slot_size = 32;
 slot_padding = 24;
+min_score_amt = 3;
 
 function create_grid(){
     var index = 0;
@@ -114,29 +115,97 @@ function score_grid(){
     for(var i = 0; i < array_length(grid); i++){
         var current_slot = grid[i];
         var current_id = current_slot.item.item_id;
+        var scored_neighbours = ds_map_create();
+
+        var scored = true;
+        while(scored == true){
+            scored = false;
+
+            if(i % grid_width != 0){
+                var left_slot = grid[i-1];
+                var added = _score_neighbour(current_slot, left_slot, scored_neighbours)
+                scored = added == true? true : scored;
+
+                if(i < array_length(grid)-1){
+                    var right_slot = grid[i+1];
+                    var added = _score_neighbour(current_slot, right_slot, scored_neighbours)
+                    scored = added == true? true : scored;
+                }
+            }
+            if(i >= grid_width){
+                var up_slot = grid[i-grid_width];
+                var added = _score_neighbour(current_slot, up_slot, scored_neighbours)
+                scored = added == true? true : scored;
+            }
+            if(i < array_length(grid) - grid_width){
+                var bot_slot = grid[i+grid_width];
+                var added = _score_neighbour(current_slot, bot_slot, scored_neighbours)
+                scored = added == true? true : scored;
+            }
+        }
+
+
+        show_debug_message(ds_map_size(scored_neighbours));
+        if(ds_map_size(scored_neighbours) >= min_score_amt){
+            var key = ds_map_find_first(scored_neighbours);
+            while(key != undefined && key != noone){
+                key.score();
+                key = ds_map_find_next(scored_neighbours, key);
+            }
+        }
+
+        ds_map_destroy(scored_neighbours);
+    }
+}
+
+function _flood_fill(root_index, scored_map){
+    var root_slot = grid[i];
+    var root_item_id = current_slot.item.item_id;
+
+    var scored = true;
+    while(scored == true){
+        scored = false;
+
         if(i % grid_width != 0){
             var left_slot = grid[i-1];
-            if(left_slot.item.item_id == current_id){
-                left_slot.score();
-            }
+            var added = _score_neighbour(current_slot, left_slot, scored_neighbours)
+            scored = added == true? true : scored;
+
             if(i < array_length(grid)-1){
                 var right_slot = grid[i+1];
-                if(right_slot.item.item_id == current_id){
-                    right_slot.score();
-                }
+                var added = _score_neighbour(current_slot, right_slot, scored_neighbours)
+                scored = added == true? true : scored;
             }
         }
         if(i >= grid_width){
             var up_slot = grid[i-grid_width];
-            if(up_slot.item.item_id == current_id){
-                up_slot.score();
-            }
+            var added = _score_neighbour(current_slot, up_slot, scored_neighbours)
+            scored = added == true? true : scored;
         }
         if(i < array_length(grid) - grid_width){
             var bot_slot = grid[i+grid_width];
-            if(bot_slot.item.item_id == current_id){
-                bot_slot.score();
-            }
+            var added = _score_neighbour(current_slot, bot_slot, scored_neighbours)
+            scored = added == true? true : scored;
         }
     }
+
+    if(ds_map_size(scored_neighbours) >= min_score_amt){
+        var key = ds_map_find_first(scored_neighbours);
+        while(key != undefined && key != noone){
+            key.score();
+            key = ds_map_find_next(scored_neighbours, key);
+        }
+    }
+}
+
+function _score_neighbour(current, neighbour, scored_map){
+    if (!instance_exists(current) || !instance_exists(neighbour)) return false;
+    if (!instance_exists(current.item) || !instance_exists(neighbour.item)) return false;
+    if(ds_exists(scored_map, ds_type_map) == false) return false;
+
+    if(ds_map_exists(scored_map, neighbour.id) == false && neighbour.item.item_id == current.item.item_id){
+        ds_map_add(scored_map, neighbour.id, true);
+        return true;
+    }
+    return false;
 }

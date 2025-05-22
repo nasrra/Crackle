@@ -10,6 +10,9 @@ item = noone;
 scored = false;
 
 function score(){
+	if(scored == true){
+		show_debug_message("double scored!");
+	}
 	scored = true;
 	alarm_set(0,120);
 }

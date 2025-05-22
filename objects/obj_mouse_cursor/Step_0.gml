@@ -3,7 +3,7 @@
 x = mouse_x;
 y = mouse_y;
 
-show_debug_message(string(hovered_slot != noone) +" "+ string(item != noone) + " "+ string(mouse_check_button_released(mb_left) == true));
+// show_debug_message(string(hovered_slot != noone) +" "+ string(item != noone) + " "+ string(mouse_check_button_released(mb_left) == true));
 
 
 if(mouse_check_button_released(mb_left) == true){
