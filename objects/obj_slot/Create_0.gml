@@ -13,11 +13,14 @@ scale = 1;
 target_scale = 1;
 scale_lerp_speed = 0.33;
 
-function initialise(){
+index = undefined;
+
+function initialise(_index){
 	scored_particle = instance_create_layer(x, y, LAYER_PARTICLES, obj_particle_system);
 	scored_particle.initialise(part_type_slot_scored(), 0, 0);
 	scored_particle.x = x;
 	scored_particle.y = y;
+	index = _index;
 }
 
 function score(){

@@ -14,7 +14,7 @@ function create_grid(){
             var slot = instance_create_layer(0,0,LAYER_SLOTS, obj_slot);
             slot.x = x + (slot_size+slot_padding + (slot_size+slot_padding) * j);
             slot.y = y + (slot_size+slot_padding + (slot_size+slot_padding) * i);
-            slot.initialise();
+            slot.initialise(index);
             array_push(grid, slot);
             // var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
             var item = instance_create_layer(0, 0, LAYER_ITEMS, get_random_item());
@@ -91,6 +91,8 @@ function insert_item_at_row(row){
 }
 
 function swap_slots(slotA, slotB) {
+    slotA.idle_state();
+    slotB.idle_state();
     // Swap the item references
     var temp_item = slotA.item;
     slotA.item = slotB.item;
@@ -140,18 +142,6 @@ function score_grid(){
             ds_map_merge(full_fill_map, up_fill_map);
             ds_map_merge(full_fill_map, down_fill_map);
         }
-        // var total_connected = ds_map_size(left_fill_map) +
-        //                     ds_map_size(right_fill_map) +
-        //                     ds_map_size(up_fill_map) +
-        //                     ds_map_size(down_fill_map);
-
-        // show_debug_message(total_connected);
-        // if (total_connected >= min_score_amt) {
-        //     ds_map_merge(full_fill_map, left_fill_map);
-        //     ds_map_merge(full_fill_map, right_fill_map);
-        //     ds_map_merge(full_fill_map, up_fill_map);
-        //     ds_map_merge(full_fill_map, down_fill_map);
-        // }
 
         ds_map_destroy(left_fill_map);
         ds_map_destroy(right_fill_map);
