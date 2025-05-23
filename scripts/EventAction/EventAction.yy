@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"EventAction",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"EventAction",
+  "parent":{
+    "name":"Collection",
+    "path":"folders/Scripts/Collection.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

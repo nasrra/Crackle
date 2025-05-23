@@ -4,19 +4,28 @@ event_inherited();
 
 layers = 10;
 layers_radius_additive = 0.33;
+layer_rotate_speed = 1;
 layers_angle = 0;
 bounce = noone;
 function initialise(_text, _scale, _angle, _world_space){
     base_initialise(_text, _scale, _angle, _world_space);
-    bounce = instance_create_layer(0,0,layer,obj_animation_bounce);
-    bounce.initialise(scale, scale, scale*bounce_factor, 30, 0.05);
+    set_bounce(scale, bounce_factor, 15, 0.15);
     bounce.start_bounce_from_zero();
-	show_debug_message(string_join(" ", "BOUNCE:", bounce));
     scale = 0;
 }
 
 if(initialise_on_create == true){
 	initialise(text, scale, angle, world_space);
+}
+
+function set_bounce(_scale, _bounce_factor, _frame_change, _lerp_speed){
+    scale = _scale;
+    if(bounce != noone && instance_exists(bounce)){
+        instance_destroy(bounce);
+    }
+    bounce = instance_create_layer(0,0,layer,obj_animation_bounce);
+    bounce.initialise(scale, scale, scale*_bounce_factor, _frame_change, _lerp_speed);
+    bounce.start_bounce_loop();
 }
 
 function draw(){
@@ -31,7 +40,7 @@ function draw(){
         draw_text_transformed(_x, _y, text, scale, scale, angle);
     }
     draw_set_color(c_white);
-    layers_angle += 8;
+    layers_angle += 8 * layer_rotate_speed;
 }
 on_lifetime_end.set(function(){
     start_destroy_timer(120);

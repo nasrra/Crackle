@@ -37,7 +37,7 @@ function draw_in_screen_space(){
 }
 
 function draw_in_world_space(){
-    draw_x_position = x * 2;
-    draw_y_position = y * 2;
+    draw_x_position = x;
+    draw_y_position = y;
     draw();
 }

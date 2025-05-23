@@ -161,7 +161,7 @@ function _score_fill_map(fill_map){
     }
     else{
         while(key != undefined && key != noone){
-            key.score();
+            key.score(100);
             audiomanager_play_slot_scored();
             remove_item(key.item.index);
             key = ds_map_find_next(fill_map, key);
