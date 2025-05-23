@@ -1,6 +1,6 @@
 /// @description Item Manager Create Event
 grid = [];
-grid_width = 4;
+grid_width = 6;
 grid_height = 5;
 slot_size = 32;
 slot_padding = 24;
@@ -160,8 +160,13 @@ function _score_fill_map(fill_map){
         exit;
     }
     else{
+		var score_amount = 100;
+		if(ds_map_size(fill_map) > 3){
+			score_amount += (ds_map_size(fill_map)-3) * 50;
+		}
+		
         while(key != undefined && key != noone){
-            key.score(100);
+            key.score(score_amount);
             audiomanager_play_slot_scored();
             remove_item(key.item.index);
             key = ds_map_find_next(fill_map, key);

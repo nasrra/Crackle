@@ -16,5 +16,5 @@ function add_value(amount){
     while (string_length(value_string) < 6) {
         value_string = "0" + value_string;
     }
-    show_debug_message(value_string);
+    // show_debug_message(value_string);
 }
