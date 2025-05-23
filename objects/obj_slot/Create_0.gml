@@ -52,7 +52,7 @@ function score_state(amount){
 	scale_lerp_speed = 0.33;
 	var score_text = instance_create_layer((x-16)/2,(y-8)/2,LAYER_TEXT,obj_text_wave); 
 	score_text.initialise(string(amount), 2, 0, true);
-	score_text.start_lifetime_timer(33);
+	score_text.start_lifetime_timer(45);
 	// obj_text_manager.add_world_space_text(score_text);
 	alarm_set(0,10);
 }
