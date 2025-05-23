@@ -7,6 +7,8 @@ slot_padding = 24;
 min_score_amt = 2;
 items_are_grabbable = true;
 
+non_grabbable_item_random_counter = 0;
+
 function create_grid(){
     var index = 0;
     for(var i = 0; i < grid_height; i++){
@@ -33,7 +35,8 @@ function set_grid_item(item, index){
 }
 
 function get_random_item(){
-    var r = irandom(3);
+    var r = non_grabbable_item_random_counter >= 6? irandom(4) : irandom(3);
+    non_grabbable_item_random_counter++;
     switch(r){
         case 0:
             return obj_item_1;
@@ -43,38 +46,67 @@ function get_random_item(){
             return obj_item_3;
         case 3:
             return obj_item_4;
+        case 4:
+            non_grabbable_item_random_counter = 0;
+            return obj_item_5;
     }
 
     score_grid();
 }
 
-function remove_item(index){
+function erase_item(index){
     var initial_slot = grid[index]; 
     instance_destroy(initial_slot.item);
-    var above = index - grid_width;
+    remove_item(index);
+}
+
+function remove_item(index){
+    var initial_slot = grid[index]; 
     var removed = false;
-    while(above >= 0){
-        var current = above+grid_width;
-        var current_slot = grid[current];
-        var above_slot = grid[above];
+
+    // Start checking from the slot above the one we're removing
+    var current_index = index;
+    var above_index = current_index - grid_width;
+
+    while (above_index >= 0) {
+        var current_slot = grid[current_index];
+        var above_slot = grid[above_index];
         var above_item = above_slot.item;
-        if(above_item != noone && instance_exists(above_item)){
+
+        if (above_item != noone && instance_exists(above_item)) {
+            // Move the item down
             current_slot.item = above_item;
-            above_item.index = current;
-            above_item.target = current_slot;
+            above_item.index = current_index;
             above_item.slot = current_slot;
+            above_item.target = current_slot;
             above_slot.item = noone;
             removed = true;
         }
-        // show_debug_message(string(current) +" "+ string(initial_slot.row));
-        above -= grid_width;
+
+        current_index = above_index;
+        above_index -= grid_width;
     }
-    if(removed == true || (index >= 0 && index < grid_width)){
+
+    // Fill top row with a new item if any item was pulled down
+    if (removed || (index >= 0 && index < grid_width)) {
         insert_item_at_row(initial_slot.row);
     }
 
-    alarm_set(0,65);
+    // Run "fall again" logic if a non-grabbable item landed in bottom row
+    var bottom_index = grid_width * (grid_height - 1); // start of bottom row
+    for (var i = bottom_index; i < grid_width * grid_height; i++) {
+        var slot = grid[i];
+        var itm = slot.item;
+        if (itm != noone && !itm.is_grabbable) {
+            remove_item(itm.index); // recursive only if necessary
+            itm.target = itm.id;
+            itm.position_y_offset += 100;
+        }
+    }
+
+    alarm_set(0, 65);
 }
+
 
 function insert_item_at_row(row){
     if(row < 0 || row > grid_width){
@@ -90,27 +122,48 @@ function insert_item_at_row(row){
     alarm_set(0,65);
 }
 
+function swap_slots_by_index(slotAIndex, slotBIndex){
+    swap_slots(grid[slotAIndex, slotBIndex]);
+}
+
+// slotA is the slot with the item that needs to be swapped into SlotB.
+// slotA is primary, slotB is secondary.
+
 function swap_slots(slotA, slotB) {
     slotA.idle_state();
     slotB.idle_state();
-    // Swap the item references
-    var temp_item = slotA.item;
-    slotA.item = slotB.item;
-    slotB.item = temp_item;
 
-    // Reassign each item's slot reference (important for logic)
+    // Track which item is coming from A
+    var itemA = slotA.item;
+    var itemB = slotB.item;
+
+    // Swap the item references
+    slotA.item = itemB;
+    slotB.item = itemA;
+
+    // Update slot reference
     slotA.item.slot = slotA;
     slotB.item.slot = slotB;
 
-    // Optionally swap index and target too, if needed:
-    var temp_index  = slotA.item.index;
-    var temp_target = slotA.item.target;
+    // Save indices/targets before overwriting
+    var indexA = itemA.index;
+    var targetA = itemA.target;
+    var indexB = itemB.index;
+    var targetB = itemB.target;
 
-    slotA.item.index = slotB.item.index;
-    slotA.item.target = slotB.item.target;
+    // Set new index and targets
+    itemA.index = indexB;
+    itemA.target = targetB;
 
-    slotB.item.index = temp_index;
-    slotB.item.target = temp_target;
+    itemB.index = indexA;
+    itemB.target = targetA;
+
+    // removal logic on the moved item
+    if (!itemB.is_grabbable && itemB.index >= ((grid_width * grid_height) - grid_width)) {
+        remove_item(itemB.index);
+        itemB.target = itemB.id; 
+        itemB.position_y_offset += 100;
+    }
 
     score_grid();
 }
@@ -168,7 +221,7 @@ function _score_fill_map(fill_map){
         while(key != undefined && key != noone){
             key.score(score_amount);
             audiomanager_play_slot_scored();
-            remove_item(key.item.index);
+            erase_item(key.item.index);
             key = ds_map_find_next(fill_map, key);
         }
         items_are_grabbable = false;
@@ -225,6 +278,9 @@ function _fill_neighbour(current, neighbour, map_to_assign, left_fill_map, right
     // if (!instance_exists(current) || !instance_exists(neighbour)) return false;
     // if (!instance_exists(current.item) || !instance_exists(neighbour.item)) return false;
     // if(ds_exists(scored_map, ds_type_map) == false) return false;
+    if(neighbour.item.can_be_scored == false){
+        return false;
+    }
 
     if( neighbour.item.item_id == current.item.item_id &&
         ds_map_exists(left_fill_map, neighbour.id)  == false &&

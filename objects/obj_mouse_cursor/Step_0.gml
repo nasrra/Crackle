@@ -15,7 +15,8 @@ if(mouse_check_button_released(mb_left) == true){
 }
 
 sprite_index = spr_mouse_idle;
-if(position_meeting(mouse_x, mouse_y, obj_slot) && obj_item_handler.items_are_grabbable == true){
+var slot = instance_place(mouse_x, mouse_y, obj_slot);
+if(slot != noone && slot.item != noone && slot.item.is_grabbable && obj_item_handler.items_are_grabbable == true){
 	sprite_index = spr_mouse_hovering;
 }
 if(item != noone){
