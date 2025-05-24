@@ -35,8 +35,7 @@ function set_grid_item(item, index){
 }
 
 function get_random_item(){
-    var r = non_grabbable_item_random_counter >= 6? irandom(4) : irandom(3);
-    non_grabbable_item_random_counter++;
+    var r = irandom_range(0,5);
     switch(r){
         case 0:
             return obj_item_1;
@@ -47,8 +46,9 @@ function get_random_item(){
         case 3:
             return obj_item_4;
         case 4:
-            non_grabbable_item_random_counter = 0;
             return obj_item_5;
+        case 5:
+            return obj_item_6;
     }
 
     score_grid();
@@ -101,6 +101,10 @@ function remove_item(index){
             remove_item(itm.index); // recursive only if necessary
             itm.target = itm.id;
             itm.position_y_offset += 100;
+            if(itm.item_id == ItemId.Item6){
+                itm.smooth_destroy(60);
+                obj_moves.add_value(1);
+            }
         }
     }
 
@@ -163,14 +167,18 @@ function swap_slots(slotA, slotB) {
         remove_item(itemB.index);
         itemB.target = itemB.id; 
         itemB.position_y_offset += 100;
+        itemB.smooth_destroy(60);
+        if(itemB.item_id == ItemId.Item6){
+            obj_moves.add_value(1);
+        }
     }
 
     score_grid();
 }
 
 function score_grid(){
-
     items_are_grabbable = false;
+
 
     var full_fill_map = ds_map_create();
 
@@ -204,6 +212,12 @@ function score_grid(){
 
     _score_fill_map(full_fill_map);
     ds_map_destroy(full_fill_map);
+
+    if(obj_moves.moves_value <= 0){
+        alarm_set(0,0);
+        alarm_set(1,60);
+        exit;
+    }
 }
 
 function _score_fill_map(fill_map){

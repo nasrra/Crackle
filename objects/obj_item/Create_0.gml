@@ -17,3 +17,7 @@ function move_to_target_position(){
     x = lerp(x, target.x + position_x_offset, move_speed);
     y = lerp(y, target.y + position_y_offset, move_speed);
 }
+
+function smooth_destroy(time_in_frames){
+	alarm_set(0, time_in_frames);
+}

@@ -50,7 +50,7 @@ function score_state(amount){
 	scored_particle.emit(20);
 	target_scale = 1.25; 
 	scale_lerp_speed = 0.33;
-	var score_text = instance_create_layer((x-16)/2,(y-8)/2,LAYER_TEXT,obj_text_wave); 
+	var score_text = instance_create_layer((x-16),(y-8),LAYER_TEXT,obj_text_wave); 
 	score_text.initialise(string(amount), 2, 0, true);
 	score_text.start_lifetime_timer(45);
 	// obj_text_manager.add_world_space_text(score_text);
@@ -59,6 +59,11 @@ function score_state(amount){
 
 function handle_scale(){
 	scale = lerp(scale, target_scale, scale_lerp_speed);
+}
+
+function clear(){
+	instance_destroy(item);
+	item = noone;
 }
 
 idle_state();

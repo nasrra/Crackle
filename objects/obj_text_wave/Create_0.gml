@@ -4,19 +4,8 @@ event_inherited();
 
 layers = 10;
 layers_radius_additive = 0.33;
-layer_rotate_speed = 1;
 layers_angle = 0;
 bounce = noone;
-function initialise(_text, _scale, _angle, _world_space){
-    base_initialise(_text, _scale, _angle, _world_space);
-    set_bounce(scale, bounce_factor, 15, 0.15);
-    bounce.start_bounce_from_zero();
-    scale = 0;
-}
-
-if(initialise_on_create == true){
-	initialise(text, scale, angle, world_space);
-}
 
 function set_bounce(_scale, _bounce_factor, _frame_change, _lerp_speed){
     scale = _scale;
@@ -37,7 +26,7 @@ function draw(){
         // draw_set_color(c_black);
         // draw_text_transformed(_x-((outline_scale-scale)*24), _y-((outline_scale-scale)*12), text, outline_scale, outline_scale+(outline_scale-scale), angle);
         draw_set_color(lerp_colour(start_colour, end_colour, lerp_factor*i));
-        draw_text_transformed(_x, _y, text, scale, scale, angle);
+        draw_text_transformed(_x * draw_position_factor, _y * draw_position_factor, text, scale, scale, angle);
     }
     draw_set_color(c_white);
     layers_angle += 8 * layer_rotate_speed;
@@ -46,3 +35,22 @@ on_lifetime_end.set(function(){
     start_destroy_timer(120);
     bounce.start_bounce_to_zero();
 });
+
+function initialise(_text, _scale, _angle, _world_space){
+    base_initialise(_text, _scale, _angle, _world_space);
+    set_bounce(scale, bounce_factor, frame_change, bounce_speed);
+    bounce.start_bounce_from_zero();
+    scale = 0;
+}
+
+function initialise_ext(_text, _scale, _angle, _world_space, _frame_change, _bounce_speed, _layer_rotate_speed){
+    base_initialise(_text, _scale, _angle, _world_space);
+    set_bounce(scale, bounce_factor, _frame_change, _bounce_speed);
+    layer_rotate_speed = _layer_rotate_speed;
+    bounce.start_bounce_from_zero();
+    scale = 0;
+}
+
+if(initialise_on_create == true){
+	initialise(text, scale, angle, world_space, frame_change, bounce_speed);
+}

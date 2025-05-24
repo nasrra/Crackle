@@ -10,12 +10,12 @@ function base_initialise(_text, _scale, _angle, _world_space){
     scale = _scale;
     angle = _angle;
 	world_space = _world_space;
-	if(_world_space==true){
-		obj_text_manager.add_world_space_text(id);
-	}
-	else{
-		obj_text_manager.add_screen_space_text(id);
-	}
+	// if(_world_space==true){
+	// 	obj_text_manager.add_world_space_text(id);
+	// }
+	// else{
+	// 	obj_text_manager.add_screen_space_text(id);
+	// }
 }
 
 function initialise(_text, _scale, _angle, _world_space){

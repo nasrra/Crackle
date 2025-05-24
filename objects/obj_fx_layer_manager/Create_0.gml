@@ -189,7 +189,7 @@ function reset_old_film(){
     fx_set_parameter(old_film_fx, "g_OldFilmRingIntensity", 0);
 }
 
-reset_old_film();
+// reset_old_film();
 
 
 

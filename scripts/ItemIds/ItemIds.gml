@@ -4,4 +4,5 @@ enum ItemId{
 	Item3,
 	Item4,
 	Item5,
+	Item6,
 }
