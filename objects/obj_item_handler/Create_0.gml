@@ -7,6 +7,14 @@ slot_padding = 24;
 min_score_amt = 2;
 items_are_grabbable = true;
 
+
+// counters start at 100.
+// turn blocks start at 100.
+base_block_block_chance = 0;
+base_block_chance = 15;
+
+dificulty_scale_factor = 0.5;
+
 non_grabbable_item_random_counter = 0;
 
 function create_grid(){
@@ -19,7 +27,7 @@ function create_grid(){
             slot.initialise(index);
             array_push(grid, slot);
             // var item = instance_create_layer(slot.x, slot.y, LAYER_ITEMS, get_random_item());
-            var item = instance_create_layer(0, 0, LAYER_ITEMS, get_random_item());
+            var item = instance_create_layer(x, y, LAYER_ITEMS, get_random_item());
             slot.item = item;
             slot.row = j;
             item.target = slot;
@@ -35,23 +43,39 @@ function set_grid_item(item, index){
 }
 
 function get_random_item(){
-    var r = irandom_range(0,5);
-    switch(r){
-        case 0:
-            return obj_item_1;
-        case 1:
-            return obj_item_2;
-        case 2:
-            return obj_item_3;
-        case 3:
-            return obj_item_4;
-        case 4:
+    var r1 = random_range(0,100);
+    
+    if(r1 < base_block_chance){
+        // spawn block;
+        var r2 = random_range(0,100);
+        if(r2<base_block_block_chance){
             return obj_item_5;
-        case 5:
-            return obj_item_6;
+        }
+        else{
+            return obj_item_6; 
+        }
     }
+    else{
+        // spawn counter.
+        var r2 = irandom(3);
+        switch(r2){
+            case 0:
+                return obj_item_1;
+            case 1:
+                return obj_item_2;
+            case 2:
+                return obj_item_3;
+            case 3:
+                return obj_item_4;
+        }
+    }
+    // score_grid();
+}
 
-    score_grid();
+function increase_difficulty(){
+    // increase the dificulty_scale_factor;
+    base_block_block_chance += dificulty_scale_factor*3.75;
+    base_block_chance += dificulty_scale_factor;
 }
 
 function erase_item(index){
@@ -93,20 +117,21 @@ function remove_item(index){
     }
 
     // Run "fall again" logic if a non-grabbable item landed in bottom row
-    var bottom_index = grid_width * (grid_height - 1); // start of bottom row
-    for (var i = bottom_index; i < grid_width * grid_height; i++) {
-        var slot = grid[i];
-        var itm = slot.item;
-        if (itm != noone && !itm.is_grabbable) {
-            remove_item(itm.index); // recursive only if necessary
-            itm.target = itm.id;
-            itm.position_y_offset += 100;
-            if(itm.item_id == ItemId.Item6){
-                itm.smooth_destroy(60);
-                obj_moves.add_value(1);
-            }
-        }
-    }
+    check_bottom_row();
+    // var bottom_index = grid_width * (grid_height - 1); // start of bottom row
+    // for (var i = bottom_index; i < grid_width * grid_height; i++) {
+    //     var slot = grid[i];
+    //     var itm = slot.item;
+    //     if (itm != noone && !itm.is_grabbable) {
+    //         remove_item(itm.index); // recursive only if necessary
+    //         itm.target = itm.id;
+    //         itm.position_y_offset += 100;
+    //         if(itm.item_id == ItemId.Item6){
+    //             itm.smooth_destroy(60);
+    //             obj_moves.add_value(1);
+    //         }
+    //     }
+    // }
 
     alarm_set(0, 65);
 }
@@ -133,7 +158,7 @@ function swap_slots_by_index(slotAIndex, slotBIndex){
 // slotA is the slot with the item that needs to be swapped into SlotB.
 // slotA is primary, slotB is secondary.
 
-function swap_slots(slotA, slotB) {
+function swap_slots(slotA, slotB) {    
     slotA.idle_state();
     slotB.idle_state();
 
@@ -163,17 +188,11 @@ function swap_slots(slotA, slotB) {
     itemB.target = targetA;
 
     // removal logic on the moved item
-    if (!itemB.is_grabbable && itemB.index >= ((grid_width * grid_height) - grid_width)) {
-        remove_item(itemB.index);
-        itemB.target = itemB.id; 
-        itemB.position_y_offset += 100;
-        itemB.smooth_destroy(60);
-        if(itemB.item_id == ItemId.Item6){
-            obj_moves.add_value(1);
-        }
-    }
+	if(slotA.item.index != slotB.item.index){
+		check_bottom_row();
+        score_grid();
+	}
 
-    score_grid();
 }
 
 function score_grid(){
@@ -216,30 +235,35 @@ function score_grid(){
     if(obj_moves.moves_value <= 0){
         alarm_set(0,0);
         alarm_set(1,60);
+        items_are_grabbable = false;
         exit;
     }
 }
 
 function _score_fill_map(fill_map){
     var key = ds_map_find_first(fill_map);
+    var score_amount = 0;
     if(key == undefined || key == noone){
         items_are_grabbable = true;
         exit;
     }
     else{
-		var score_amount = 100;
+		var base_score_amount = 100;
 		if(ds_map_size(fill_map) > 3){
-			score_amount += (ds_map_size(fill_map)-3) * 50;
+			base_score_amount += (ds_map_size(fill_map)-3) * 50;
 		}
 		
         while(key != undefined && key != noone){
-            key.score(score_amount);
+            key.score(base_score_amount);
+            score_amount += base_score_amount;
             audiomanager_play_slot_scored();
             erase_item(key.item.index);
             key = ds_map_find_next(fill_map, key);
         }
         items_are_grabbable = false;
     }    
+
+    obj_score.add_value(score_amount);
 }
 
 function _flood_fill(root_index, left_fill_map, right_fill_map, up_fill_map, down_fill_map){
@@ -305,4 +329,20 @@ function _fill_neighbour(current, neighbour, map_to_assign, left_fill_map, right
         return true;
     }
     return false;
+}
+
+// checks bootom row for blocks.
+function check_bottom_row(){
+    for(var i = array_length(grid)-grid_width; i < array_length(grid); i++){
+        var item = grid[i].item;
+        if (!item.is_grabbable && item.index >= ((grid_width * grid_height) - grid_width)) {
+            remove_item(item.index);
+            item.target = item.id; 
+            item.position_y_offset += 100;
+            item.smooth_destroy(60);
+            if(item.item_id == ItemId.Item6){
+                obj_moves.add_value(2);
+            }
+        }
+    }
 }

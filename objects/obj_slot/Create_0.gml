@@ -24,12 +24,11 @@ function initialise(_index){
 }
 
 function score(amount){
-	obj_score.add_value(amount);
 	score_state(amount);
 }
 
 function hover_state(){
-	target_scale = 1.15; 
+	target_scale = 1.2; 
 	scale_lerp_speed = 0.33;
 }
 

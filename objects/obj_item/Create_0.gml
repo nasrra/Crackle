@@ -9,6 +9,7 @@ mouse_move_speed = 1;
 move_speed = idle_move_speed;
 grabbing = false;
 item_id = undefined;
+target_scale = 1;
 
 function move_to_target_position(){
     if(target = undefined){

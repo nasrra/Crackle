@@ -3,6 +3,7 @@
   "%Name":"obj_menu_button_play_again",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
   "name":"obj_menu_button_play_again",
@@ -12,6 +13,7 @@
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_menu_button","path":"objects/obj_menu_button/obj_menu_button.yy",},"propertyId":{"name":"text_offset_y","path":"objects/obj_menu_button/obj_menu_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"-8",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_menu_button","path":"objects/obj_menu_button/obj_menu_button.yy",},"propertyId":{"name":"text_scale","path":"objects/obj_menu_button/obj_menu_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"1.33",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_menu_button","path":"objects/obj_menu_button/obj_menu_button.yy",},"propertyId":{"name":"button_scale_x","path":"objects/obj_menu_button/obj_menu_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"3.33333",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_menu_button","path":"objects/obj_menu_button/obj_menu_button.yy",},"propertyId":{"name":"text_layer","path":"objects/obj_menu_button/obj_menu_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"MenuText",},
   ],
   "parent":{
     "name":"Menus",

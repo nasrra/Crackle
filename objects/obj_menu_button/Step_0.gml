@@ -1,7 +1,7 @@
 /// @description Insert description here
 // You can write your code in this editor
-if(position_meeting(mouse_x, mouse_y, id) && global.game_state == GameState.MENU){
-    target_scale = 1.15;
+if(position_meeting(mouse_x, mouse_y, id)){
+    target_scale = 1.2;
     if(mouse_check_button_pressed(mb_left) == true && on_press != undefined){
         on_press();
     }

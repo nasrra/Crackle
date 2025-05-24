@@ -11,6 +11,7 @@ if(mouse_check_button_released(mb_left) == true){
 	if(hovered_slot != noone && item != noone && mouse_check_button_released(mb_left) == true){
 		if(hovered_slot != item.slot){
 			obj_moves.add_value(-1);
+			obj_item_handler.increase_difficulty();
 		}
 		obj_item_handler.swap_slots(item.slot, hovered_slot);
 	}
@@ -18,14 +19,14 @@ if(mouse_check_button_released(mb_left) == true){
 }
 
 sprite_index = spr_mouse_idle;
-var slot = instance_place(mouse_x, mouse_y, obj_slot);
-if(slot != noone && slot.item != noone && slot.item.is_grabbable && obj_item_handler.items_are_grabbable == true){
+var hovered_item = instance_place(mouse_x, mouse_y, obj_item);
+if(hovered_item != noone && hovered_item.is_grabbable && obj_item_handler.items_are_grabbable == true){
+	sprite_index = spr_mouse_hovering;
+}
+var button = instance_place(mouse_x, mouse_y, obj_menu_button);
+if(button != noone && button.active == true){
 	sprite_index = spr_mouse_hovering;
 }
 if(item != noone){
 	sprite_index = spr_mouse_grabbing;
-}
-
-if(position_meeting(mouse_x, mouse_y, obj_menu_button)){
-	sprite_index = spr_mouse_hovering;
 }
