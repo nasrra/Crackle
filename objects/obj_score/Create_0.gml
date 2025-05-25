@@ -11,13 +11,13 @@ text.set_bounce(2, 0.85, 120, 0.01);
 
 particle_1 = instance_create_layer(x, y, LAYER_PARTICLES, obj_particle_system);
 particle_1.initialise(part_type_slot_scored(), 0, 0);
-particle_1.x = x+16;
-particle_1.y = y;
+particle_1.x = x+24;
+particle_1.y = y+8;
 
 particle_2 = instance_create_layer(x, y, LAYER_PARTICLES, obj_particle_system);
 particle_2.initialise(part_type_slot_scored(), 0, 0);
 particle_2.x = x+200;
-particle_2.y = y;
+particle_2.y = y+8;
 
 
 function add_value(amount){

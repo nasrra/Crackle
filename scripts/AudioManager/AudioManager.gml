@@ -52,3 +52,7 @@ function audiomanager_play_item_swap(){
 			break;
 	} 
 }
+
+function audiomanager_play_logo_chime(){
+	audio_play_sound(snd_logo_chime, 0, false, 1, 0, 1);
+}
