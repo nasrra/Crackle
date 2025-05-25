@@ -1,6 +1,7 @@
 randomize();
 
 global.game_state = GameState.GAMEPLAY;
+global.player_name = "";
 
 function gamemanager_gameplay_state(){
     global.game_state = GameState.GAMEPLAY;

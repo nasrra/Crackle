@@ -76,6 +76,7 @@ function increase_difficulty(){
     // increase the dificulty_scale_factor;
     base_block_block_chance += dificulty_scale_factor*3.75;
     base_block_chance += dificulty_scale_factor;
+    dificulty_scale_factor *= 0.98; // difficulty decay;
 }
 
 function erase_item(index){
@@ -186,6 +187,7 @@ function swap_slots(slotA, slotB) {
 
     itemB.index = indexA;
     itemB.target = targetA;
+    audiomanager_play_item_swap();
 
     // removal logic on the moved item
 	if(slotA.item.index != slotB.item.index){
@@ -256,13 +258,12 @@ function _score_fill_map(fill_map){
         while(key != undefined && key != noone){
             key.score(base_score_amount);
             score_amount += base_score_amount;
-            audiomanager_play_slot_scored();
             erase_item(key.item.index);
             key = ds_map_find_next(fill_map, key);
         }
         items_are_grabbable = false;
+        audiomanager_play_slot_scored();
     }    
-
     obj_score.add_value(score_amount);
 }
 

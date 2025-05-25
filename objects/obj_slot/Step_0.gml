@@ -4,7 +4,7 @@ previous_hovered = hovered;
 if (obj_mouse_cursor.item != noone) {
 	var mouse_index = obj_mouse_cursor.item.index;
 	var grid_width = obj_item_handler.grid_width;
-
+	
 	// Vertical and same cell
 	if (
 		mouse_index == index + grid_width || 
@@ -14,15 +14,44 @@ if (obj_mouse_cursor.item != noone) {
 		hovered = position_meeting(mouse_x, mouse_y, id);
 	}
 
-	// Right (mouse is to the right of this cell)
+	// Right
 	else if ((mouse_index == index + 1) && (index div grid_width == mouse_index div grid_width)) {
 		hovered = position_meeting(mouse_x, mouse_y, id);
 	}
 
-	// Left (mouse is to the left of this cell)
+	// Left
 	else if ((mouse_index == index - 1) && (index div grid_width == mouse_index div grid_width)) {
 		hovered = position_meeting(mouse_x, mouse_y, id);
 	}
+
+	// Top-left
+	else if ((mouse_index == index - grid_width - 1) &&
+	         (index div grid_width == (index - 1) div grid_width) &&
+	         (mouse_index div grid_width == (index - grid_width) div grid_width)) {
+		hovered = position_meeting(mouse_x, mouse_y, id);
+	}
+
+	// Top-right
+	else if ((mouse_index == index - grid_width + 1) &&
+	         (index div grid_width == (index + 1) div grid_width) &&
+	         (mouse_index div grid_width == (index - grid_width) div grid_width)) {
+		hovered = position_meeting(mouse_x, mouse_y, id);
+	}
+
+	// Bottom-left
+	else if ((mouse_index == index + grid_width - 1) &&
+	         (index div grid_width == (index - 1) div grid_width) &&
+	         (mouse_index div grid_width == (index + grid_width) div grid_width)) {
+		hovered = position_meeting(mouse_x, mouse_y, id);
+	}
+
+	// Bottom-right
+	else if ((mouse_index == index + grid_width + 1) &&
+	         (index div grid_width == (index + 1) div grid_width) &&
+	         (mouse_index div grid_width == (index + grid_width) div grid_width)) {
+		hovered = position_meeting(mouse_x, mouse_y, id);
+	}
+
 }
 
 

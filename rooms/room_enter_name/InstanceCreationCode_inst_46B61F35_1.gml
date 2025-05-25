@@ -1,0 +1,1 @@
+audiomanager_play_music();
