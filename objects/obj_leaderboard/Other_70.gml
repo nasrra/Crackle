@@ -4,9 +4,6 @@
 show_debug_message("async");
 if(async_load[? "status"] == 200){
     switch(async_load[? "type"]){
-        case "FirebaseFirestore_Collection_Listener":
-           FirebaseFirestore(root).Query();
-           break;
         case "FirebaseFirestore_Collection_Query":
             data = [];
 

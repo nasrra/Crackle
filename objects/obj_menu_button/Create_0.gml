@@ -6,3 +6,4 @@ text.initialise_ext(text_text, text_scale, 0, true, 120, 0.005, 0.25);
 text.bounce.start_bounce_loop();
 
 on_press = undefined;
+on_press_ext = undefined;

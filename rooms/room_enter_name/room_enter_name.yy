@@ -97,7 +97,7 @@
         {"$GMRInstance":"v1","%Name":"inst_4496BA4A","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4496BA4A","objectId":{"name":"obj_menu_button_play","path":"objects/obj_menu_button_play/obj_menu_button_play.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":5.0,"scaleY":1.0,"x":960.0,"y":288.0,},
       ],"layers":[],"name":"DisplayButtons","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMREffectLayer":"","%Name":"Effect_2","depth":1200,"effectEnabled":true,"effectType":"_effect_windblown_particles","gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Effect_2","properties":[
-        {"name":"param_sprite","type":2,"value":"spr_slot",},
+        {"name":"param_sprite","type":2,"value":"spr_slot_1",},
         {"name":"param_num_particles","type":0,"value":"60",},
         {"name":"param_particle_spawn_time","type":0,"value":"100",},
         {"name":"param_particle_spawn_all_at_start","type":0,"value":"1",},

@@ -9,3 +9,5 @@ cursor = "|";
 alarm_set(10,20);
 
 bounce.start_bounce_loop();
+
+//namefilter_load_file();

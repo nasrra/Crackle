@@ -2,8 +2,13 @@
 // You can write your code in this editor
 if(position_meeting(mouse_x, mouse_y, id)){
     target_scale = 1.2;
-    if(mouse_check_button_pressed(mb_left) == true && on_press != undefined){
-        on_press();
+    if(mouse_check_button_pressed(mb_left) == true){
+        if(on_press != undefined){
+			on_press();
+		}
+		if(on_press_ext != undefined){
+			on_press_ext();
+		}
     }
 }
 else{

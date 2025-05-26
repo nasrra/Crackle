@@ -27,10 +27,9 @@ text6 = instance_create_layer(x+text_offset_x,y+text_offset_y+text_padding*5, la
 text6.initialise_ext("", text_scale, 0, true, 120, 0.005, 0.25);
 text6.bounce.start_bounce_loop();
 
-show_debug_message("load");
 root = "leaderboard";
 // listener = FirebaseFirestore(root).Listener();
-FirebaseFirestore(root).Query();
+// FirebaseFirestore(root).Query();
 
 data = -1;
 
@@ -57,7 +56,6 @@ function evaluate_score(_name, _score){
 }
 
 function add_highscore(_name, _score){
-    FirebaseFirestore(root).Query();
     var _n = _name;
     while (string_length(_n) < 10) {
         _n = _n+" ";
@@ -79,7 +77,6 @@ function add_highscore(_name, _score){
 }
 
 function remove_highscore(index){
-    FirebaseFirestore(root).Query();
     if(data != -1 && array_length(data)>index){
         var _doc = FirebaseFirestore(root).Child(data[index].id);
         _doc.Delete();
@@ -94,9 +91,12 @@ function remove_first_highscore(){
 
 function set_text(){
     if(data == -1){
-        text1.text = "Loading...";
-        text2.text = "";
-        text3.text = "";
+        text1.text = "LOADING...";
+        text2.text = "LOADING...";
+        text3.text = "LOADING...";
+        text4.text = "LOADING...";
+        text5.text = "LOADING...";
+        text6.text = "LOADING...";
     }
     else{
         for(var i = 0; i < 6; i++){
