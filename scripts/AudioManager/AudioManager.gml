@@ -56,3 +56,7 @@ function audiomanager_play_item_swap(){
 function audiomanager_play_logo_chime(){
 	audio_play_sound(snd_logo_chime, 0, false, 1, 0, 1);
 }
+
+function audiomanager_play_game_over(){
+	audio_play_sound(snd_game_over, 0, false, 1, 0, 1);
+}

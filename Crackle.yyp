@@ -164,6 +164,7 @@
     {"id":{"name":"PartType","path":"scripts/PartType/PartType.yy",},},
     {"id":{"name":"SlotScaleState","path":"scripts/SlotScaleState/SlotScaleState.yy",},},
     {"id":{"name":"snd_bell","path":"sounds/snd_bell/snd_bell.yy",},},
+    {"id":{"name":"snd_game_over","path":"sounds/snd_game_over/snd_game_over.yy",},},
     {"id":{"name":"snd_item_swap_1","path":"sounds/snd_item_swap_1/snd_item_swap_1.yy",},},
     {"id":{"name":"snd_item_swap_2","path":"sounds/snd_item_swap_2/snd_item_swap_2.yy",},},
     {"id":{"name":"snd_item_swap_3","path":"sounds/snd_item_swap_3/snd_item_swap_3.yy",},},
@@ -192,8 +193,8 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"room_begin","path":"rooms/room_begin/room_begin.yy",},},
     {"roomId":{"name":"room_enter_name","path":"rooms/room_enter_name/room_enter_name.yy",},},
+    {"roomId":{"name":"room_begin","path":"rooms/room_begin/room_begin.yy",},},
     {"roomId":{"name":"room_game","path":"rooms/room_game/room_game.yy",},},
     {"roomId":{"name":"Room_FirebaseFirestore","path":"rooms/Room_FirebaseFirestore/Room_FirebaseFirestore.yy",},},
     {"roomId":{"name":"Room_FirebaseFirestore_Query","path":"rooms/Room_FirebaseFirestore_Query/Room_FirebaseFirestore_Query.yy",},},

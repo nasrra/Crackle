@@ -4,4 +4,8 @@
 // Inherit the parent event
 event_inherited();
 
+cursor = "|";
+
+alarm_set(10,20);
+
 bounce.start_bounce_loop();

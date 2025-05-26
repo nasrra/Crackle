@@ -29,7 +29,8 @@ text6.bounce.start_bounce_loop();
 
 show_debug_message("load");
 root = "leaderboard";
-listener = FirebaseFirestore(root).Listener();
+// listener = FirebaseFirestore(root).Listener();
+FirebaseFirestore(root).Query();
 
 data = -1;
 
@@ -38,19 +39,25 @@ sort_score = function(_a, _b){
 }
 
 function evaluate_score(_name, _score){
+    FirebaseFirestore(root).Query();
     if(array_length(data) == 6){
+        var smallest_score = 999999;
+        var smallest_index = -1;
         for(var i = 0; i < array_length(data); i++){
-            if(data[i].score < _score){
-                remove_highscore(i);
-                add_highscore(_name, _score);
+            if(data[i].score < smallest_score){
+                smallest_index = i;
+                smallest_score = data[i].score;
             }
         } 
+        remove_highscore(smallest_index);
+        add_highscore(_name, _score);
     }else{
         add_highscore(_name, _score);
     }
 }
 
 function add_highscore(_name, _score){
+    FirebaseFirestore(root).Query();
     var _n = _name;
     while (string_length(_n) < 10) {
         _n = _n+" ";
@@ -72,6 +79,7 @@ function add_highscore(_name, _score){
 }
 
 function remove_highscore(index){
+    FirebaseFirestore(root).Query();
     if(data != -1 && array_length(data)>index){
         var _doc = FirebaseFirestore(root).Child(data[index].id);
         _doc.Delete();
@@ -79,6 +87,7 @@ function remove_highscore(index){
 }
 
 function remove_first_highscore(){
+    FirebaseFirestore(root).Query();
     var _doc = FirebaseFirestore(root).Child(data[0].id);
     _doc.Delete();
 }

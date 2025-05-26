@@ -15,6 +15,7 @@ function gamemanager_menu_state(){
     layer_set_visible(LAYER_MENU_TEXT,          true);
     layer_set_visible(LAYER_MENU_BUTTONS,       true);
     layer_set_visible(LAYER_MENU_BACKGROUND,    true);
+    audiomanager_play_game_over();
 }
 
 enum GameState{

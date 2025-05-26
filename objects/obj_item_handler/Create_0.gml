@@ -75,6 +75,7 @@ function get_random_item(){
 function increase_difficulty(){
     // increase the dificulty_scale_factor;
     base_block_block_chance += dificulty_scale_factor*3.75;
+    // base_block_block_chance *= 0.98;
     base_block_chance += dificulty_scale_factor;
     dificulty_scale_factor *= 0.98; // difficulty decay;
 }

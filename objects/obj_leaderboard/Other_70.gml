@@ -1,7 +1,7 @@
 /// @description Insert description here
 // You can write your code in this editor
 
-// show_debug_message("async");
+show_debug_message("async");
 if(async_load[? "status"] == 200){
     switch(async_load[? "type"]){
         case "FirebaseFirestore_Collection_Listener":
