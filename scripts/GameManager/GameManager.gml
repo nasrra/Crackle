@@ -1,5 +1,7 @@
 randomize();
 
+window_set_caption("Crackle");
+
 global.game_state = GameState.GAMEPLAY;
 global.player_name = "";
 

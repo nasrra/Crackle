@@ -196,8 +196,8 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"room_begin","path":"rooms/room_begin/room_begin.yy",},},
     {"roomId":{"name":"room_game","path":"rooms/room_game/room_game.yy",},},
+    {"roomId":{"name":"room_begin","path":"rooms/room_begin/room_begin.yy",},},
     {"roomId":{"name":"room_enter_name","path":"rooms/room_enter_name/room_enter_name.yy",},},
     {"roomId":{"name":"Room_FirebaseFirestore","path":"rooms/Room_FirebaseFirestore/Room_FirebaseFirestore.yy",},},
     {"roomId":{"name":"Room_FirebaseFirestore_Query","path":"rooms/Room_FirebaseFirestore_Query/Room_FirebaseFirestore_Query.yy",},},
