@@ -86,6 +86,14 @@ function erase_item(index){
     remove_item(index);
 }
 
+function erase_items(items){
+    for(var i = 0; i < array_length(items); i++){
+        if(instance_exists(items[i])){
+            erase_item(items[i].index);
+        }
+    }
+}
+
 function remove_item(index){
     var initial_slot = grid[index]; 
     var removed = false;
@@ -255,13 +263,16 @@ function _score_fill_map(fill_map){
 		if(ds_map_size(fill_map) > 3){
 			base_score_amount += (ds_map_size(fill_map)-3) * 50;
 		}
-		
+        items_to_remove = [];
+
         while(key != undefined && key != noone){
             key.score(base_score_amount);
             score_amount += base_score_amount;
-            erase_item(key.item.index);
+            // erase_item(key.item.index);
+            array_push(items_to_remove, key.item);
             key = ds_map_find_next(fill_map, key);
         }
+        erase_items(items_to_remove);
         items_are_grabbable = false;
         audiomanager_play_slot_scored();
     }    
