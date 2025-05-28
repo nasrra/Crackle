@@ -5,9 +5,9 @@
 event_inherited();
 
 on_press = function(){
-	if(string_length(global.player_name) > 0){
+	// if(string_length(global.player_name) > 0){
 		gamemanager_gameplay_state();
 		room_goto(room_game);
-	}
+	// }
 };
 
